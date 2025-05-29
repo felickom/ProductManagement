@@ -9,14 +9,14 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ProductManagement.API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly ProductManagementContext _context;
+        private readonly ProductmanagementContext _context;
 
-        public ProductsController(ProductManagementContext context)
+        public ProductsController(ProductmanagementContext context)
         {
             _context = context;
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql.Scaffolding.Internal;
+using ProductManagement.API.Models;
 
 namespace ProductManagement.API.Data;
 
@@ -19,6 +20,7 @@ public partial class ProductmanagementContext : DbContext
     public virtual DbSet<Apiuser> Apiusers { get; set; }
 
     public virtual DbSet<Product> Products { get; set; }
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
@@ -61,9 +63,16 @@ public partial class ProductmanagementContext : DbContext
             entity.Property(e => e.Description).HasMaxLength(255);
             entity.Property(e => e.IsDelete).HasColumnName("is_delete");
             entity.Property(e => e.Name).HasMaxLength(255);
-            entity.Property(e => e.Price).HasPrecision(10);
+            entity.Property(e => e.Price)
+                .HasPrecision(18, 2);
             entity.Property(e => e.UpdateBy).HasMaxLength(255);
             entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
+        });
+
+        modelBuilder.Entity<Apiuser>(entity =>
+        {
+            entity.HasIndex(u => u.Username)
+                .IsUnique();
         });
 
         OnModelCreatingPartial(modelBuilder);

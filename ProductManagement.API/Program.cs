@@ -13,7 +13,7 @@ builder.Services.AddControllers();
 
 // Configure database
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<ProductManagementContext>(options =>
+builder.Services.AddDbContext<ProductmanagementContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 // Configure JWT Authentication
@@ -108,7 +108,7 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     try
     {
-        var context = services.GetRequiredService<ProductManagementContext>();
+        var context = services.GetRequiredService<ProductmanagementContext>();
         context.Database.EnsureCreated();
     }
     catch (Exception ex)

@@ -11,10 +11,10 @@ namespace ProductManagement.API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly ProductManagementContext _context;
+        private readonly ProductmanagementContext _context;
         private readonly JwtService _jwtService;
 
-        public AuthController(ProductManagementContext context, JwtService jwtService)
+        public AuthController(ProductmanagementContext context, JwtService jwtService)
         {
             _context = context;
             _jwtService = jwtService;
