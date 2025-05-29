@@ -21,11 +21,31 @@ namespace ProductManagement.API.Controllers
             _context = context;
         }
 
-        // GET: api/Products
+        // GET: api/products
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+        public async Task<ActionResult<IEnumerable<Product>>> GetProducts(
+            [FromQuery] string? name,
+            [FromQuery] decimal? minPrice,
+            [FromQuery] decimal? maxPrice)
         {
-            return await _context.Products.Where(p => p.IsDelete == false).ToListAsync();
+            var query = _context.Products.Where(p => p.IsDelete == false);
+
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                query = query.Where(p => p.Name.Contains(name));
+            }
+
+            if (minPrice.HasValue)
+            {
+                query = query.Where(p => p.Price >= minPrice.Value);
+            }
+
+            if (maxPrice.HasValue)
+            {
+                query = query.Where(p => p.Price <= maxPrice.Value);
+            }
+
+            return await query.ToListAsync();
         }
 
         // GET: api/Products/5

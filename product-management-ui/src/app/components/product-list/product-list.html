@@ -1,5 +1,26 @@
 <div class="product-list">
-    <h2>Products</h2>
+    <div class="header">
+        <h2>Products</h2>
+        <div class="search-controls">
+            <div class="search-form">
+                <div class="form-group">
+                    <input type="text" placeholder="Search by name..." [(ngModel)]="searchParams.name"
+                        (ngModelChange)="onSearch()" class="search-input">
+                </div>
+                <div class="form-group price-range">
+                    <input type="number" placeholder="Min price" [ngModel]="searchParams.minPrice"
+                        (ngModelChange)="onPriceInput($event, 'minPrice')" class="price-input">
+                    <span class="separator">-</span>
+                    <input type="number" placeholder="Max price" [ngModel]="searchParams.maxPrice"
+                        (ngModelChange)="onPriceInput($event, 'maxPrice')" class="price-input">
+                </div>
+                <button class="clear-btn" (click)="clearSearch()"
+                    [disabled]="!searchParams.name && searchParams.minPrice === null && searchParams.maxPrice === null">
+                    Clear
+                </button>
+            </div>
+        </div>
+    </div>
     <div class="products">
         @for (product of products; track product.id) {
         <div class="product-card">
@@ -15,7 +36,7 @@
         </div>
         }
         @if (products.length === 0) {
-        <p class="no-products">No products available.</p>
+        <p class="no-products">No products found.</p>
         }
     </div>
 </div>
