@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { ProductService, ProductSearchParams } from '../../services/product';
 import { Product } from '../../models/product';
+import { NotificationService } from '../../services/notification';
 import { debounceTime, Subject } from 'rxjs';
 
 @Component({
@@ -21,8 +22,12 @@ export class ProductList implements OnInit, OnDestroy {
     maxPrice: null
   };
   private searchSubject = new Subject<void>();
+  isLoading = false;
 
-  constructor(private productService: ProductService) {
+  constructor(
+    private productService: ProductService,
+    private notificationService: NotificationService
+  ) {
     this.searchSubject
       .pipe(debounceTime(300))
       .subscribe(() => this.loadProducts());
@@ -50,6 +55,7 @@ export class ProductList implements OnInit, OnDestroy {
   }
 
   loadProducts() {
+    this.isLoading = true;
     // Clean up search params before sending
     const cleanParams: ProductSearchParams = {};
 
@@ -68,23 +74,26 @@ export class ProductList implements OnInit, OnDestroy {
     this.productService.getProducts(cleanParams).subscribe({
       next: (products) => {
         this.products = products;
+        this.isLoading = false;
       },
       error: (error) => {
         console.error('Error loading products:', error);
-        // TODO: Add proper error handling/user notification
+        this.notificationService.showError('Failed to load products. Please try again.');
+        this.isLoading = false;
       }
     });
   }
 
-  deleteProduct(id: number) {
-    if (confirm('Are you sure you want to delete this product?')) {
+  deleteProduct(id: number, productName: string) {
+    if (confirm(`Are you sure you want to delete "${productName}"?`)) {
       this.productService.deleteProduct(id).subscribe({
         next: () => {
           this.products = this.products.filter(p => p.id !== id);
+          this.notificationService.showSuccess(`Product "${productName}" deleted successfully.`);
         },
         error: (error) => {
           console.error('Error deleting product:', error);
-          // TODO: Add proper error handling/user notification
+          this.notificationService.showError('Failed to delete product. Please try again.');
         }
       });
     }

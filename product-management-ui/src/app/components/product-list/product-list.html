@@ -22,21 +22,25 @@
         </div>
     </div>
     <div class="products">
-        @for (product of products; track product.id) {
-        <div class="product-card">
-            <h3>{{ product.name }}</h3>
-            @if (product.description) {
-            <p class="description">{{ product.description }}</p>
-            }
-            <p class="price">Rp {{ product.price | number:'1.0-0' }}</p>
-            <div class="actions">
-                <button class="delete-btn" (click)="deleteProduct(product.id!)">Delete</button>
-                <a [routerLink]="['/products/edit', product.id]" class="edit-btn">Edit</a>
+        @if (isLoading) {
+        <div class="loading">Loading products...</div>
+        } @else {
+            @for (product of products; track product.id) {
+            <div class="product-card">
+                <h3>{{ product.name }}</h3>
+                @if (product.description) {
+                <p class="description">{{ product.description }}</p>
+                }
+                <p class="price">Rp {{ product.price | number:'1.0-0' }}</p>
+                <div class="actions">
+                    <button class="delete-btn" (click)="deleteProduct(product.id!, product.name)">Delete</button>
+                    <a [routerLink]="['/products/edit', product.id]" class="edit-btn">Edit</a>
+                </div>
             </div>
-        </div>
-        }
-        @if (products.length === 0) {
-        <p class="no-products">No products found.</p>
+            }
+            @if (products.length === 0) {
+            <p class="no-products">No products found.</p>
+            }
         }
     </div>
 </div>

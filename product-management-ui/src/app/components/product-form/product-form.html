@@ -1,5 +1,5 @@
 <div class="product-form">
-    <h2>Add Product</h2>
+    <h2>{{ isEditMode ? 'Edit Product' : 'Add Product' }}</h2>
     <form (ngSubmit)="onSubmit()" #productForm="ngForm">
         <div class="form-group">
             <label for="name">Name</label>
@@ -28,7 +28,9 @@
         </div>
 
         <div class="form-actions">
-            <button type="submit" [disabled]="!productForm.form.valid">Save Product</button>
+            <button type="submit" [disabled]="!productForm.form.valid || isSubmitting">
+                {{ isSubmitting ? 'Saving...' : 'Save Product' }}
+            </button>
         </div>
     </form>
 </div>

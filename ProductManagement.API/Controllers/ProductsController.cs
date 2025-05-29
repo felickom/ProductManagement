@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProductManagement.API.Data;
 using Microsoft.AspNetCore.Authorization;
+using ProductManagement.API.Models;
+using System.Net;
 
 namespace ProductManagement.API.Controllers
 {
@@ -15,126 +17,224 @@ namespace ProductManagement.API.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly ProductmanagementContext _context;
+        private readonly ILogger<ProductsController> _logger;
 
-        public ProductsController(ProductmanagementContext context)
+        public ProductsController(ProductmanagementContext context, ILogger<ProductsController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: api/products
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts(
+        [ProducesResponseType(typeof(ApiResponse<IEnumerable<Product>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<IEnumerable<Product>>), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ApiResponse<IEnumerable<Product>>>> GetProducts(
             [FromQuery] string? name,
             [FromQuery] decimal? minPrice,
             [FromQuery] decimal? maxPrice)
         {
-            var query = _context.Products.Where(p => p.IsDelete == false);
-
-            if (!string.IsNullOrWhiteSpace(name))
+            try
             {
-                query = query.Where(p => p.Name.Contains(name));
-            }
+                _logger.LogInformation("Getting products with filters: name={Name}, minPrice={MinPrice}, maxPrice={MaxPrice}", 
+                    name, minPrice, maxPrice);
 
-            if (minPrice.HasValue)
+                var query = _context.Products.Where(p => p.IsDelete == false);
+
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    query = query.Where(p => p.Name.Contains(name));
+                }
+
+                if (minPrice.HasValue)
+                {
+                    query = query.Where(p => p.Price >= minPrice.Value);
+                }
+
+                if (maxPrice.HasValue)
+                {
+                    query = query.Where(p => p.Price <= maxPrice.Value);
+                }
+
+                var products = await query.ToListAsync();
+                _logger.LogInformation("Retrieved {Count} products", products.Count);
+
+                return Ok(ApiResponse<IEnumerable<Product>>.SuccessResponse(products, "Products retrieved successfully"));
+            }
+            catch (Exception ex)
             {
-                query = query.Where(p => p.Price >= minPrice.Value);
+                _logger.LogError(ex, "Error retrieving products");
+                return StatusCode((int)HttpStatusCode.InternalServerError, 
+                    ApiResponse<IEnumerable<Product>>.ServerErrorResponse("An error occurred while retrieving products"));
             }
-
-            if (maxPrice.HasValue)
-            {
-                query = query.Where(p => p.Price <= maxPrice.Value);
-            }
-
-            return await query.ToListAsync();
         }
 
         // GET: api/Products/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProduct(int id)
+        [ProducesResponseType(typeof(ApiResponse<Product>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<Product>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiResponse<Product>), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ApiResponse<Product>>> GetProduct(int id)
         {
-            var product = await _context.Products.Where(p => p.IsDelete == false && p.Id == id).FirstOrDefaultAsync();
-
-            if (product == null)
+            try
             {
-                return NotFound();
-            }
+                _logger.LogInformation("Getting product with ID: {ProductId}", id);
 
-            return product;
+                var product = await _context.Products.Where(p => p.IsDelete == false && p.Id == id).FirstOrDefaultAsync();
+
+                if (product == null)
+                {
+                    _logger.LogWarning("Product with ID {ProductId} not found", id);
+                    return NotFound(ApiResponse<Product>.NotFoundResponse($"Product with ID {id} not found"));
+                }
+
+                _logger.LogInformation("Retrieved product with ID: {ProductId}", id);
+                return Ok(ApiResponse<Product>.SuccessResponse(product, "Product retrieved successfully"));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving product with ID {ProductId}", id);
+                return StatusCode((int)HttpStatusCode.InternalServerError, 
+                    ApiResponse<Product>.ServerErrorResponse($"An error occurred while retrieving product with ID {id}"));
+            }
         }
 
         // POST: api/Products
         [HttpPost]
-        public async Task<ActionResult<Product>> CreateProduct(Product product)
+        [ProducesResponseType(typeof(ApiResponse<Product>), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ApiResponse<Product>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponse<Product>), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ApiResponse<Product>>> CreateProduct(Product product)
         {
-            var newProduct = new Product
+            try
             {
-                Name = product.Name,
-                Description = product.Description,
-                Price = product.Price,
-                IsDelete = false,
-                CreatedBy = User.Identity.Name
-            };
+                _logger.LogInformation("Creating new product: {ProductName}", product.Name);
 
-            _context.Products.Add(newProduct);
-            await _context.SaveChangesAsync();
+                if (!ModelState.IsValid)
+                {
+                    _logger.LogWarning("Invalid product data submitted");
+                    return BadRequest(ApiResponse<Product>.BadRequestResponse("Invalid product data"));
+                }
 
-            return CreatedAtAction(nameof(GetProduct), new { id = newProduct.Id }, newProduct);
+                var newProduct = new Product
+                {
+                    Name = product.Name,
+                    Description = product.Description,
+                    Price = product.Price,
+                    IsDelete = false,
+                    CreatedBy = User.Identity?.Name ?? "system",
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                _context.Products.Add(newProduct);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Product created successfully with ID: {ProductId}", newProduct.Id);
+                return CreatedAtAction(nameof(GetProduct), new { id = newProduct.Id }, 
+                    ApiResponse<Product>.CreatedResponse(newProduct, "Product created successfully"));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating product");
+                return StatusCode((int)HttpStatusCode.InternalServerError, 
+                    ApiResponse<Product>.ServerErrorResponse("An error occurred while creating the product"));
+            }
         }
 
         // PUT: api/Products/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProduct(int id, Product product)
+        [ProducesResponseType(typeof(ApiResponse<Product>), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ApiResponse<Product>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiResponse<Product>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponse<Product>), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ApiResponse<Product>>> UpdateProduct(int id, Product product)
         {
-            var existingProduct = await _context.Products.FindAsync(id);
-
-            if (existingProduct == null)
-            {
-                return NotFound();
-            }
-
-            existingProduct.Name = product.Name;
-            existingProduct.Description = product.Description;
-            existingProduct.Price = product.Price;
-            existingProduct.UpdateBy = User.Identity.Name;
-            existingProduct.UpdatedAt = DateTime.Now;
-
             try
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ProductExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+                _logger.LogInformation("Updating product with ID: {ProductId}", id);
 
-            return NoContent();
+                if (!ModelState.IsValid)
+                {
+                    _logger.LogWarning("Invalid product data submitted for update");
+                    return BadRequest(ApiResponse<Product>.BadRequestResponse("Invalid product data"));
+                }
+
+                var existingProduct = await _context.Products.FindAsync(id);
+
+                if (existingProduct == null)
+                {
+                    _logger.LogWarning("Product with ID {ProductId} not found for update", id);
+                    return NotFound(ApiResponse<Product>.NotFoundResponse($"Product with ID {id} not found"));
+                }
+
+                existingProduct.Name = product.Name;
+                existingProduct.Description = product.Description;
+                existingProduct.Price = product.Price;
+                existingProduct.UpdateBy = User.Identity?.Name ?? "system";
+                existingProduct.UpdatedAt = DateTime.UtcNow;
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    _logger.LogInformation("Product with ID {ProductId} updated successfully", id);
+                    return NoContent();
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    if (!ProductExists(id))
+                    {
+                        _logger.LogWarning("Product with ID {ProductId} not found after concurrency check", id);
+                        return NotFound(ApiResponse<Product>.NotFoundResponse($"Product with ID {id} not found"));
+                    }
+                    else
+                    {
+                        _logger.LogError(ex, "Concurrency error while updating product with ID {ProductId}", id);
+                        throw;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating product with ID {ProductId}", id);
+                return StatusCode((int)HttpStatusCode.InternalServerError, 
+                    ApiResponse<Product>.ServerErrorResponse($"An error occurred while updating product with ID {id}"));
+            }
         }
 
         // DELETE: api/Products/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProduct(int id)
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ApiResponse<object>>> DeleteProduct(int id)
         {
-            var product = await _context.Products.FindAsync(id);
-            if (product == null)
+            try
             {
-                return NotFound();
+                _logger.LogInformation("Soft deleting product with ID: {ProductId}", id);
+
+                var product = await _context.Products.FindAsync(id);
+                if (product == null)
+                {
+                    _logger.LogWarning("Product with ID {ProductId} not found for deletion", id);
+                    return NotFound(ApiResponse<object>.NotFoundResponse($"Product with ID {id} not found"));
+                }
+
+                product.IsDelete = true;
+                product.DeletedBy = User.Identity?.Name ?? "system";
+                product.DeletedAt = DateTime.UtcNow;
+
+                _context.Products.Update(product);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Product with ID {ProductId} soft deleted successfully", id);
+                return NoContent();
             }
-
-            product.IsDelete = true;
-            product.DeletedBy = User.Identity.Name;
-            product.DeletedAt = DateTime.Now;
-
-            _context.Products.Update(product);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting product with ID {ProductId}", id);
+                return StatusCode((int)HttpStatusCode.InternalServerError, 
+                    ApiResponse<object>.ServerErrorResponse($"An error occurred while deleting product with ID {id}"));
+            }
         }
 
         private bool ProductExists(int id)

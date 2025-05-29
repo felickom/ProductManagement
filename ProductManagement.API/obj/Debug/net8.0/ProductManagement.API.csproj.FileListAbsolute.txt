@@ -140,3 +140,15 @@ D:\GitHub\ProductManagement\productManagement.API\bin\Debug\net8.0\Microsoft.Ide
 D:\GitHub\ProductManagement\productManagement.API\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 D:\GitHub\ProductManagement\productManagement.API\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
 D:\GitHub\ProductManagement\productManagement.API\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+D:\GitHub\ProductManagement\ProductManagement.API\bin\Debug\net8.0\Serilog.dll
+D:\GitHub\ProductManagement\ProductManagement.API\bin\Debug\net8.0\Serilog.AspNetCore.dll
+D:\GitHub\ProductManagement\ProductManagement.API\bin\Debug\net8.0\Serilog.Enrichers.Environment.dll
+D:\GitHub\ProductManagement\ProductManagement.API\bin\Debug\net8.0\Serilog.Enrichers.Process.dll
+D:\GitHub\ProductManagement\ProductManagement.API\bin\Debug\net8.0\Serilog.Enrichers.Thread.dll
+D:\GitHub\ProductManagement\ProductManagement.API\bin\Debug\net8.0\Serilog.Extensions.Hosting.dll
+D:\GitHub\ProductManagement\ProductManagement.API\bin\Debug\net8.0\Serilog.Extensions.Logging.dll
+D:\GitHub\ProductManagement\ProductManagement.API\bin\Debug\net8.0\Serilog.Formatting.Compact.dll
+D:\GitHub\ProductManagement\ProductManagement.API\bin\Debug\net8.0\Serilog.Settings.Configuration.dll
+D:\GitHub\ProductManagement\ProductManagement.API\bin\Debug\net8.0\Serilog.Sinks.Console.dll
+D:\GitHub\ProductManagement\ProductManagement.API\bin\Debug\net8.0\Serilog.Sinks.Debug.dll
+D:\GitHub\ProductManagement\ProductManagement.API\bin\Debug\net8.0\Serilog.Sinks.File.dll

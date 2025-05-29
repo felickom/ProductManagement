@@ -1,6 +1,6 @@
 import { HttpInterceptorFn, HttpRequest, HttpHandlerFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { AuthService } from '../services/auth';
 import { Router } from '@angular/router';
@@ -12,8 +12,10 @@ export const AuthInterceptor: HttpInterceptorFn = (
     const authService = inject(AuthService);
     const router = inject(Router);
     const token = authService.getToken();
-
-    if (token && !request.url.includes('/auth/login')) {
+    
+    // Only add token for non-login requests
+    if (token && !request.url.toLowerCase().includes('/auth/login')) {
+        
         request = request.clone({
             setHeaders: {
                 Authorization: `Bearer ${token}`
@@ -22,7 +24,11 @@ export const AuthInterceptor: HttpInterceptorFn = (
     }
 
     return next(request).pipe(
+        tap(response => {
+        }),
         catchError((error: HttpErrorResponse) => {
+            console.error(`Error from ${request.url}:`, error);
+            
             if (error.status === 401) {
                 authService.logout();
                 router.navigate(['/login']);

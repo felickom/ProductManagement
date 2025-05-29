@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, map, tap } from 'rxjs';
 
 export interface LoginRequest {
     username: string;
@@ -9,26 +9,40 @@ export interface LoginRequest {
 
 export interface AuthResponse {
     token: string;
-    expiresIn?: number;
+    username: string;
+}
+
+interface ApiResponse<T> {
+    success: boolean;
+    message: string;
+    data: T;
+    statusCode: number;
 }
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
-    private apiUrl = 'http://localhost:5063/api/auth'; // Adjust this URL to match your backend auth endpoint
+    private apiUrl = 'http://localhost:5063/api/Auth'; // Updated to match backend controller case
     private tokenKey = 'auth_token';
     private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasValidToken());
 
     constructor(private http: HttpClient) { }
 
     login(credentials: LoginRequest): Observable<AuthResponse> {
-        return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
-            tap(response => {
-                this.setToken(response.token);
-                this.isAuthenticatedSubject.next(true);
-            })
-        );
+        return this.http.post<ApiResponse<AuthResponse>>(`${this.apiUrl}/login`, credentials)
+            .pipe(
+                map(response => {
+                    if (response.success && response.data) {
+                        return response.data;
+                    }
+                    throw new Error(response.message || 'Login failed');
+                }),
+                tap(response => {
+                    this.setToken(response.token);
+                    this.isAuthenticatedSubject.next(true);
+                })
+            );
     }
 
     logout(): void {
@@ -37,7 +51,8 @@ export class AuthService {
     }
 
     getToken(): string | null {
-        return localStorage.getItem(this.tokenKey);
+        const token = localStorage.getItem(this.tokenKey);
+        return token;
     }
 
     private setToken(token: string): void {

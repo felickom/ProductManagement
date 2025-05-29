@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ProductService } from '../../services/product';
 import { Product } from '../../models/product';
+import { NotificationService } from '../../services/notification';
 
 @Component({
   selector: 'app-product-form',
@@ -19,11 +20,13 @@ export class ProductForm implements OnInit {
     price: 0
   };
   isEditMode = false;
+  isSubmitting = false;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private productService: ProductService
+    private productService: ProductService,
+    private notificationService: NotificationService
   ) { }
 
   ngOnInit() {
@@ -41,23 +44,32 @@ export class ProductForm implements OnInit {
       },
       error: (error) => {
         console.error('Error loading product:', error);
-        // TODO: Add proper error handling/user notification
+        this.notificationService.showError('Failed to load product details.');
+        this.router.navigate(['/products']);
       }
     });
   }
 
   onSubmit() {
+    if (this.isSubmitting) return;
+    
+    this.isSubmitting = true;
     const operation = this.isEditMode
       ? this.productService.updateProduct(this.product.id!, this.product)
       : this.productService.createProduct(this.product);
 
     operation.subscribe({
       next: () => {
+        const message = this.isEditMode 
+          ? `Product "${this.product.name}" updated successfully.` 
+          : `Product "${this.product.name}" created successfully.`;
+        this.notificationService.showSuccess(message);
         this.router.navigate(['/products']);
       },
       error: (error) => {
         console.error('Error saving product:', error);
-        // TODO: Add proper error handling/user notification
+        this.notificationService.showError('Failed to save product. Please try again.');
+        this.isSubmitting = false;
       }
     });
   }
