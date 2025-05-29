@@ -176,13 +176,16 @@
 </style>
 
 <div class="app-container">
+  @if (authService.isAuthenticated() | async) {
   <header>
     <h1>{{ title }}</h1>
     <nav>
       <a routerLink="/products" routerLinkActive="active">Products</a>
       <a routerLink="/products/new" routerLinkActive="active">Add Product</a>
+      <button class="logout-btn" (click)="logout()">Logout</button>
     </nav>
   </header>
+  }
   <main>
     <router-outlet></router-outlet>
   </main>
