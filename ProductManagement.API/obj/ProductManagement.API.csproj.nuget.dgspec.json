@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\GitHub\\ProductManagement\\ProductManagement.API\\ProductManagement.API.csproj": {}
+    "D:\\GitHub\\ProductManagement\\productmanagement.api\\ProductManagement.API.csproj": {}
   },
   "projects": {
-    "D:\\GitHub\\ProductManagement\\ProductManagement.API\\ProductManagement.API.csproj": {
+    "D:\\GitHub\\ProductManagement\\productmanagement.api\\ProductManagement.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\GitHub\\ProductManagement\\ProductManagement.API\\ProductManagement.API.csproj",
+        "projectUniqueName": "D:\\GitHub\\ProductManagement\\productmanagement.api\\ProductManagement.API.csproj",
         "projectName": "ProductManagement.API",
-        "projectPath": "D:\\GitHub\\ProductManagement\\ProductManagement.API\\ProductManagement.API.csproj",
+        "projectPath": "D:\\GitHub\\ProductManagement\\productmanagement.api\\ProductManagement.API.csproj",
         "packagesPath": "C:\\Users\\USER\\.nuget\\packages\\",
-        "outputPath": "D:\\GitHub\\ProductManagement\\ProductManagement.API\\obj\\",
+        "outputPath": "D:\\GitHub\\ProductManagement\\productmanagement.api\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
-import { Observable, map, of } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { Product } from '../models/product';
 
 export interface ProductSearchParams {
@@ -20,11 +20,10 @@ interface ApiResponse<T> {
   providedIn: 'root'
 })
 export class ProductService {
-  private apiUrl = 'http://localhost:5063/api/Products'; // Updated to match backend controller case
+  private apiUrl = 'http://localhost:5063/api/Products';
 
   constructor(private http: HttpClient) { }
 
-  // Get all products with optional search parameters
   getProducts(searchParams?: ProductSearchParams): Observable<Product[]> {
     let params = new HttpParams();
 
@@ -42,80 +41,57 @@ export class ProductService {
 
     return this.http.get<ApiResponse<Product[]>>(this.apiUrl, { params })
       .pipe(
-        map(response => {
-          if (response.success && response.data) {
-            return response.data;
-          }
-          throw new Error(response.message || 'Failed to fetch products');
-        })
+        map(response => this.handleResponse<Product[]>(response))
       );
   }
 
-  // Get a single product by ID
   getProduct(id: number): Observable<Product> {
     return this.http.get<ApiResponse<Product>>(`${this.apiUrl}/${id}`)
       .pipe(
-        map(response => {
-          if (response.success && response.data) {
-            return response.data;
-          }
-          throw new Error(response.message || 'Failed to fetch product');
-        })
+        map(response => this.handleResponse<Product>(response))
       );
   }
 
-  // Create a new product
   createProduct(product: Product): Observable<Product> {
     return this.http.post<ApiResponse<Product>>(this.apiUrl, product)
       .pipe(
-        map(response => {
-          if (response.success && response.data) {
-            return response.data;
-          }
-          throw new Error(response.message || 'Failed to create product');
-        })
+        map(response => this.handleResponse<Product>(response))
       );
   }
 
-  // Update an existing product
   updateProduct(id: number, product: Product): Observable<Product> {
     return this.http.put<any>(`${this.apiUrl}/${id}`, product, { observe: 'response' })
       .pipe(
         map(response => {
-          // Handle 204 No Content response (success with no body)
           if (response.status === 204) {
-            return product; // Return the product that was sent
+            return product;
           }
-          
-          // Handle regular ApiResponse
-          const body = response.body;
-          if (body && body.success && body.data) {
-            return body.data;
-          }
-          
-          throw new Error((body && body.message) || 'Failed to update product');
+
+          return this.handleResponse<Product>(response.body);
         })
       );
   }
 
-  // Delete a product
   deleteProduct(id: number): Observable<void> {
     return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/${id}`, { observe: 'response' })
       .pipe(
         map(response => {
-          // Handle 204 No Content response (success with no body)
           if (response.status === 204) {
             return;
           }
           
-          // Handle regular ApiResponse
-          const body = response.body;
-          if (body && body.success) {
-            return;
+          if (response.body) {
+            this.handleResponse<void>(response.body);
           }
-          
-          throw new Error((body && body.message) || 'Failed to delete product');
+          return;
         })
       );
+  }
+
+  private handleResponse<T>(response: ApiResponse<T>): T {
+    if (response.success && response.data) {
+      return response.data;
+    }
+    throw new Error(response.message || `Failed to process request`);
   }
 }

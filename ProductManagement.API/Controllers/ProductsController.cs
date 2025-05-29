@@ -36,7 +36,7 @@ namespace ProductManagement.API.Controllers
         {
             try
             {
-                _logger.LogInformation("Getting products with filters: name={Name}, minPrice={MinPrice}, maxPrice={MaxPrice}", 
+                _logger.LogInformation("Getting products with filters: name={Name}, minPrice={MinPrice}, maxPrice={MaxPrice}",
                     name, minPrice, maxPrice);
 
                 var query = _context.Products.Where(p => p.IsDelete == false);
@@ -64,8 +64,7 @@ namespace ProductManagement.API.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error retrieving products");
-                return StatusCode((int)HttpStatusCode.InternalServerError, 
-                    ApiResponse<IEnumerable<Product>>.ServerErrorResponse("An error occurred while retrieving products"));
+                return HandleException<IEnumerable<Product>>(ex, "An error occurred while retrieving products");
             }
         }
 
@@ -94,8 +93,7 @@ namespace ProductManagement.API.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error retrieving product with ID {ProductId}", id);
-                return StatusCode((int)HttpStatusCode.InternalServerError, 
-                    ApiResponse<Product>.ServerErrorResponse($"An error occurred while retrieving product with ID {id}"));
+                return HandleException<Product>(ex, $"An error occurred while retrieving product with ID {id}");
             }
         }
 
@@ -130,14 +128,13 @@ namespace ProductManagement.API.Controllers
                 await _context.SaveChangesAsync();
 
                 _logger.LogInformation("Product created successfully with ID: {ProductId}", newProduct.Id);
-                return CreatedAtAction(nameof(GetProduct), new { id = newProduct.Id }, 
+                return CreatedAtAction(nameof(GetProduct), new { id = newProduct.Id },
                     ApiResponse<Product>.CreatedResponse(newProduct, "Product created successfully"));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error creating product");
-                return StatusCode((int)HttpStatusCode.InternalServerError, 
-                    ApiResponse<Product>.ServerErrorResponse("An error occurred while creating the product"));
+                return HandleException<Product>(ex, "An error occurred while creating the product");
             }
         }
 
@@ -167,11 +164,7 @@ namespace ProductManagement.API.Controllers
                     return NotFound(ApiResponse<Product>.NotFoundResponse($"Product with ID {id} not found"));
                 }
 
-                existingProduct.Name = product.Name;
-                existingProduct.Description = product.Description;
-                existingProduct.Price = product.Price;
-                existingProduct.UpdateBy = User.Identity?.Name ?? "system";
-                existingProduct.UpdatedAt = DateTime.UtcNow;
+                UpdateProductProperties(existingProduct, product);
 
                 try
                 {
@@ -196,8 +189,7 @@ namespace ProductManagement.API.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error updating product with ID {ProductId}", id);
-                return StatusCode((int)HttpStatusCode.InternalServerError, 
-                    ApiResponse<Product>.ServerErrorResponse($"An error occurred while updating product with ID {id}"));
+                return HandleException<Product>(ex, $"An error occurred while updating product with ID {id}");
             }
         }
 
@@ -219,11 +211,7 @@ namespace ProductManagement.API.Controllers
                     return NotFound(ApiResponse<object>.NotFoundResponse($"Product with ID {id} not found"));
                 }
 
-                product.IsDelete = true;
-                product.DeletedBy = User.Identity?.Name ?? "system";
-                product.DeletedAt = DateTime.UtcNow;
-
-                _context.Products.Update(product);
+                MarkProductAsDeleted(product);
                 await _context.SaveChangesAsync();
 
                 _logger.LogInformation("Product with ID {ProductId} soft deleted successfully", id);
@@ -232,8 +220,7 @@ namespace ProductManagement.API.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error deleting product with ID {ProductId}", id);
-                return StatusCode((int)HttpStatusCode.InternalServerError, 
-                    ApiResponse<object>.ServerErrorResponse($"An error occurred while deleting product with ID {id}"));
+                return HandleException<object>(ex, $"An error occurred while deleting product with ID {id}");
             }
         }
 
@@ -241,5 +228,28 @@ namespace ProductManagement.API.Controllers
         {
             return _context.Products.Any(e => e.Id == id);
         }
+
+        private void UpdateProductProperties(Product existingProduct, Product updatedProduct)
+        {
+            existingProduct.Name = updatedProduct.Name;
+            existingProduct.Description = updatedProduct.Description;
+            existingProduct.Price = updatedProduct.Price;
+            existingProduct.UpdateBy = User.Identity?.Name;
+            existingProduct.UpdatedAt = DateTime.UtcNow;
+        }
+
+        private void MarkProductAsDeleted(Product product)
+        {
+            product.IsDelete = true;
+            product.DeletedBy = User.Identity?.Name;
+            product.DeletedAt = DateTime.UtcNow;
+            _context.Products.Update(product);
+        }
+
+        private ActionResult<ApiResponse<T>> HandleException<T>(Exception ex, string defaultMessage)
+        {
+            return StatusCode((int)HttpStatusCode.InternalServerError,
+                ApiResponse<T>.ServerErrorResponse(defaultMessage));
+        }
     }
-} 
+}

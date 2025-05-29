@@ -20,7 +20,7 @@ Log.Logger = new LoggerConfiguration()
     .Enrich.WithProcessId()
     .WriteTo.Console()
     .WriteTo.File(
-        path: "logs/productmanagement-.log", 
+        path: "logs/productmanagement-.log",
         rollingInterval: RollingInterval.Day,
         outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
     .CreateLogger();
@@ -54,7 +54,26 @@ try
                 ValidateIssuerSigningKey = true,
                 ValidIssuer = builder.Configuration["Jwt:Issuer"],
                 ValidAudience = builder.Configuration["Jwt:Audience"],
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+                ClockSkew = TimeSpan.Zero // Removes the default 5 minute clock skew
+            };
+
+            // Handle authentication failures
+            options.Events = new JwtBearerEvents
+            {
+                OnAuthenticationFailed = context =>
+                {
+                    if (context.Exception is SecurityTokenExpiredException)
+                    {
+                        context.Response.Headers.Add("Token-Expired", "true");
+                        Log.Warning("Authentication failed: Token expired");
+                    }
+                    else
+                    {
+                        Log.Warning(context.Exception, "Authentication failed");
+                    }
+                    return Task.CompletedTask;
+                }
             };
         });
 
@@ -69,7 +88,7 @@ try
     builder.Services.AddSwaggerGen(options =>
     {
         options.SwaggerDoc("v1", new OpenApiInfo { Title = "Product Management API", Version = "v1" });
-        
+
         // Add JWT Authentication
         options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
         {

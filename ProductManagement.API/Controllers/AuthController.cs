@@ -33,30 +33,23 @@ namespace ProductManagement.API.Controllers
         {
             _logger.LogInformation("Login attempt for user: {Username}", request.Username);
 
-            if (string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Password))
+            if (!ValidateLoginRequest(request, out var errorResponse))
             {
-                _logger.LogWarning("Login failed: Username or password is empty");
-                return BadRequest(ApiResponse<AuthResponse>.BadRequestResponse("Username and password are required"));
+                return errorResponse;
             }
 
             try
             {
-                var user = await _context.Apiusers
-                    .FirstOrDefaultAsync(u => u.Username == request.Username);
+                var user = await GetUserByUsername(request.Username);
 
-                if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
+                if (user == null || !VerifyPassword(request.Password, user.Password))
                 {
                     _logger.LogWarning("Login failed: Invalid credentials for user {Username}", request.Username);
                     return Unauthorized(ApiResponse<AuthResponse>.UnauthorizedResponse("Invalid username or password"));
                 }
 
                 var token = _jwtService.GenerateToken(user);
-
-                var response = new AuthResponse
-                {
-                    Token = token,
-                    Username = user.Username
-                };
+                var response = CreateAuthResponse(user, token);
 
                 _logger.LogInformation("Login successful for user: {Username}", request.Username);
                 return Ok(ApiResponse<AuthResponse>.SuccessResponse(response, "Login successful"));
@@ -64,9 +57,43 @@ namespace ProductManagement.API.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error during login for user {Username}", request.Username);
-                return StatusCode((int)HttpStatusCode.InternalServerError, 
+                return StatusCode((int)HttpStatusCode.InternalServerError,
                     ApiResponse<AuthResponse>.ServerErrorResponse("An error occurred during login"));
             }
         }
+
+        private bool ValidateLoginRequest(LoginRequest request, out ActionResult<ApiResponse<AuthResponse>> errorResponse)
+        {
+            errorResponse = null;
+
+            if (string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Password))
+            {
+                _logger.LogWarning("Login failed: Username or password is empty");
+                errorResponse = BadRequest(ApiResponse<AuthResponse>.BadRequestResponse("Username and password are required"));
+                return false;
+            }
+
+            return true;
+        }
+
+        private async Task<Apiuser> GetUserByUsername(string username)
+        {
+            return await _context.Apiusers
+                .FirstOrDefaultAsync(u => u.Username == username);
+        }
+
+        private bool VerifyPassword(string providedPassword, string storedPassword)
+        {
+            return BCrypt.Net.BCrypt.Verify(providedPassword, storedPassword);
+        }
+
+        private AuthResponse CreateAuthResponse(Apiuser user, string token)
+        {
+            return new AuthResponse
+            {
+                Token = token,
+                Username = user.Username
+            };
+        }
     }
-} 
+}

@@ -1,0 +1,265 @@
+2025-05-29 22:33:06.595 +07:00 [INF] Starting ProductManagement API
+2025-05-29 22:33:07.815 +07:00 [INF] Executed DbCommand (16ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE WHEN COUNT(*) = 0 THEN FALSE ELSE TRUE END
+FROM information_schema.tables
+WHERE table_type = 'BASE TABLE' AND table_schema = 'productmanagement'
+2025-05-29 22:33:07.829 +07:00 [INF] Database created successfully
+2025-05-29 22:33:07.918 +07:00 [INF] Now listening on: http://localhost:5063
+2025-05-29 22:33:07.921 +07:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-05-29 22:33:07.922 +07:00 [INF] Hosting environment: Development
+2025-05-29 22:33:07.923 +07:00 [INF] Content root path: D:\GitHub\ProductManagement\productmanagement.api
+2025-05-29 22:33:12.939 +07:00 [INF] HTTP OPTIONS /api/Auth/login started at "2025-05-29T15:33:12.9389870Z"
+2025-05-29 22:33:12.944 +07:00 [WRN] Failed to determine the https port for redirect.
+2025-05-29 22:33:12.946 +07:00 [INF] HTTP OPTIONS /api/Auth/login completed with status 204 at "2025-05-29T15:33:12.9461157Z"
+2025-05-29 22:33:12.955 +07:00 [INF] HTTP POST /api/Auth/login started at "2025-05-29T15:33:12.9550024Z"
+2025-05-29 22:33:13.014 +07:00 [INF] Login attempt for user: admin
+2025-05-29 22:33:13.253 +07:00 [INF] Executed DbCommand (25ms) [Parameters=[@__request_Username_0='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `a`.`ClientId`, `a`.`Password`, `a`.`Username`
+FROM `apiuser` AS `a`
+WHERE `a`.`Username` = @__request_Username_0
+LIMIT 1
+2025-05-29 22:33:13.604 +07:00 [INF] Login successful for user: admin
+2025-05-29 22:33:13.622 +07:00 [INF] HTTP POST /api/Auth/login completed with status 200 at "2025-05-29T15:33:13.6228412Z"
+2025-05-29 22:33:13.643 +07:00 [INF] HTTP OPTIONS /api/Products started at "2025-05-29T15:33:13.6433361Z"
+2025-05-29 22:33:13.646 +07:00 [INF] HTTP OPTIONS /api/Products completed with status 204 at "2025-05-29T15:33:13.6459610Z"
+2025-05-29 22:33:13.653 +07:00 [INF] HTTP GET /api/Products started at "2025-05-29T15:33:13.6538046Z"
+2025-05-29 22:33:13.699 +07:00 [INF] Getting products with filters: name=null, minPrice=null, maxPrice=null
+2025-05-29 22:33:13.767 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `p`.`Id`, `p`.`CreatedAt`, `p`.`CreatedBy`, `p`.`DeletedAt`, `p`.`DeletedBy`, `p`.`Description`, `p`.`is_delete`, `p`.`Name`, `p`.`Price`, `p`.`UpdateBy`, `p`.`UpdatedAt`
+FROM `products` AS `p`
+WHERE `p`.`is_delete` = FALSE
+2025-05-29 22:33:13.799 +07:00 [INF] Retrieved 3 products
+2025-05-29 22:33:13.825 +07:00 [INF] HTTP GET /api/Products completed with status 200 at "2025-05-29T15:33:13.8255332Z"
+2025-05-29 22:33:19.753 +07:00 [INF] HTTP OPTIONS /api/Products started at "2025-05-29T15:33:19.7531900Z"
+2025-05-29 22:33:19.756 +07:00 [INF] HTTP OPTIONS /api/Products completed with status 204 at "2025-05-29T15:33:19.7564966Z"
+2025-05-29 22:33:19.760 +07:00 [INF] HTTP GET /api/Products started at "2025-05-29T15:33:19.7607833Z"
+2025-05-29 22:33:19.791 +07:00 [INF] Getting products with filters: name=soto, minPrice=null, maxPrice=null
+2025-05-29 22:33:19.870 +07:00 [INF] Executed DbCommand (3ms) [Parameters=[@__name_0_contains='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `p`.`Id`, `p`.`CreatedAt`, `p`.`CreatedBy`, `p`.`DeletedAt`, `p`.`DeletedBy`, `p`.`Description`, `p`.`is_delete`, `p`.`Name`, `p`.`Price`, `p`.`UpdateBy`, `p`.`UpdatedAt`
+FROM `products` AS `p`
+WHERE (`p`.`is_delete` = FALSE) AND (`p`.`Name` LIKE @__name_0_contains)
+2025-05-29 22:33:19.874 +07:00 [INF] Retrieved 1 products
+2025-05-29 22:33:19.875 +07:00 [INF] HTTP GET /api/Products completed with status 200 at "2025-05-29T15:33:19.8756126Z"
+2025-05-29 22:33:21.334 +07:00 [INF] HTTP OPTIONS /api/Products started at "2025-05-29T15:33:21.3345606Z"
+2025-05-29 22:33:21.338 +07:00 [INF] HTTP OPTIONS /api/Products completed with status 204 at "2025-05-29T15:33:21.3388518Z"
+2025-05-29 22:33:21.343 +07:00 [INF] HTTP GET /api/Products started at "2025-05-29T15:33:21.3437271Z"
+2025-05-29 22:33:21.360 +07:00 [INF] Getting products with filters: name=null, minPrice=null, maxPrice=null
+2025-05-29 22:33:21.368 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `p`.`Id`, `p`.`CreatedAt`, `p`.`CreatedBy`, `p`.`DeletedAt`, `p`.`DeletedBy`, `p`.`Description`, `p`.`is_delete`, `p`.`Name`, `p`.`Price`, `p`.`UpdateBy`, `p`.`UpdatedAt`
+FROM `products` AS `p`
+WHERE `p`.`is_delete` = FALSE
+2025-05-29 22:33:21.370 +07:00 [INF] Retrieved 3 products
+2025-05-29 22:33:21.372 +07:00 [INF] HTTP GET /api/Products completed with status 200 at "2025-05-29T15:33:21.3728051Z"
+2025-05-29 22:33:23.206 +07:00 [INF] HTTP OPTIONS /api/Products started at "2025-05-29T15:33:23.2068978Z"
+2025-05-29 22:33:23.210 +07:00 [INF] HTTP OPTIONS /api/Products completed with status 204 at "2025-05-29T15:33:23.2101663Z"
+2025-05-29 22:33:23.214 +07:00 [INF] HTTP GET /api/Products started at "2025-05-29T15:33:23.2145742Z"
+2025-05-29 22:33:23.240 +07:00 [INF] Getting products with filters: name=indomie, minPrice=null, maxPrice=null
+2025-05-29 22:33:23.243 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__name_0_contains='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `p`.`Id`, `p`.`CreatedAt`, `p`.`CreatedBy`, `p`.`DeletedAt`, `p`.`DeletedBy`, `p`.`Description`, `p`.`is_delete`, `p`.`Name`, `p`.`Price`, `p`.`UpdateBy`, `p`.`UpdatedAt`
+FROM `products` AS `p`
+WHERE (`p`.`is_delete` = FALSE) AND (`p`.`Name` LIKE @__name_0_contains)
+2025-05-29 22:33:23.245 +07:00 [INF] Retrieved 2 products
+2025-05-29 22:33:23.246 +07:00 [INF] HTTP GET /api/Products completed with status 200 at "2025-05-29T15:33:23.2467791Z"
+2025-05-29 22:33:24.991 +07:00 [INF] HTTP GET /api/Products started at "2025-05-29T15:33:24.9917266Z"
+2025-05-29 22:33:25.010 +07:00 [INF] Getting products with filters: name=null, minPrice=null, maxPrice=null
+2025-05-29 22:33:25.014 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `p`.`Id`, `p`.`CreatedAt`, `p`.`CreatedBy`, `p`.`DeletedAt`, `p`.`DeletedBy`, `p`.`Description`, `p`.`is_delete`, `p`.`Name`, `p`.`Price`, `p`.`UpdateBy`, `p`.`UpdatedAt`
+FROM `products` AS `p`
+WHERE `p`.`is_delete` = FALSE
+2025-05-29 22:33:25.015 +07:00 [INF] Retrieved 3 products
+2025-05-29 22:33:25.017 +07:00 [INF] HTTP GET /api/Products completed with status 200 at "2025-05-29T15:33:25.0171157Z"
+2025-05-29 22:33:27.683 +07:00 [INF] HTTP OPTIONS /api/Products started at "2025-05-29T15:33:27.6833258Z"
+2025-05-29 22:33:27.685 +07:00 [INF] HTTP OPTIONS /api/Products completed with status 204 at "2025-05-29T15:33:27.6853298Z"
+2025-05-29 22:33:27.689 +07:00 [INF] HTTP GET /api/Products started at "2025-05-29T15:33:27.6897646Z"
+2025-05-29 22:33:27.705 +07:00 [INF] Getting products with filters: name=null, minPrice=5000, maxPrice=null
+2025-05-29 22:33:27.718 +07:00 [INF] Executed DbCommand (3ms) [Parameters=[@__minPrice_Value_0='?' (DbType = Decimal)], CommandType='"Text"', CommandTimeout='30']
+SELECT `p`.`Id`, `p`.`CreatedAt`, `p`.`CreatedBy`, `p`.`DeletedAt`, `p`.`DeletedBy`, `p`.`Description`, `p`.`is_delete`, `p`.`Name`, `p`.`Price`, `p`.`UpdateBy`, `p`.`UpdatedAt`
+FROM `products` AS `p`
+WHERE (`p`.`is_delete` = FALSE) AND (`p`.`Price` >= @__minPrice_Value_0)
+2025-05-29 22:33:27.721 +07:00 [INF] Retrieved 2 products
+2025-05-29 22:33:27.723 +07:00 [INF] HTTP GET /api/Products completed with status 200 at "2025-05-29T15:33:27.7232563Z"
+2025-05-29 22:33:29.329 +07:00 [INF] HTTP OPTIONS /api/Products started at "2025-05-29T15:33:29.3297931Z"
+2025-05-29 22:33:29.332 +07:00 [INF] HTTP OPTIONS /api/Products completed with status 204 at "2025-05-29T15:33:29.3326357Z"
+2025-05-29 22:33:29.336 +07:00 [INF] HTTP GET /api/Products started at "2025-05-29T15:33:29.3369656Z"
+2025-05-29 22:33:29.354 +07:00 [INF] Getting products with filters: name=null, minPrice=null, maxPrice=null
+2025-05-29 22:33:29.358 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `p`.`Id`, `p`.`CreatedAt`, `p`.`CreatedBy`, `p`.`DeletedAt`, `p`.`DeletedBy`, `p`.`Description`, `p`.`is_delete`, `p`.`Name`, `p`.`Price`, `p`.`UpdateBy`, `p`.`UpdatedAt`
+FROM `products` AS `p`
+WHERE `p`.`is_delete` = FALSE
+2025-05-29 22:33:29.361 +07:00 [INF] Retrieved 3 products
+2025-05-29 22:33:29.363 +07:00 [INF] HTTP GET /api/Products completed with status 200 at "2025-05-29T15:33:29.3635243Z"
+2025-05-29 22:33:30.990 +07:00 [INF] HTTP OPTIONS /api/Products/6 started at "2025-05-29T15:33:30.9902735Z"
+2025-05-29 22:33:30.992 +07:00 [INF] HTTP OPTIONS /api/Products/6 completed with status 204 at "2025-05-29T15:33:30.9922510Z"
+2025-05-29 22:33:30.996 +07:00 [INF] HTTP GET /api/Products/6 started at "2025-05-29T15:33:30.9968778Z"
+2025-05-29 22:33:31.018 +07:00 [INF] Getting product with ID: 6
+2025-05-29 22:33:31.029 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT `p`.`Id`, `p`.`CreatedAt`, `p`.`CreatedBy`, `p`.`DeletedAt`, `p`.`DeletedBy`, `p`.`Description`, `p`.`is_delete`, `p`.`Name`, `p`.`Price`, `p`.`UpdateBy`, `p`.`UpdatedAt`
+FROM `products` AS `p`
+WHERE (`p`.`is_delete` = FALSE) AND (`p`.`Id` = @__id_0)
+LIMIT 1
+2025-05-29 22:33:31.032 +07:00 [INF] Retrieved product with ID: 6
+2025-05-29 22:33:31.036 +07:00 [INF] HTTP GET /api/Products/6 completed with status 200 at "2025-05-29T15:33:31.0363239Z"
+2025-05-29 22:33:34.225 +07:00 [INF] HTTP OPTIONS /api/Products/6 started at "2025-05-29T15:33:34.2258489Z"
+2025-05-29 22:33:34.229 +07:00 [INF] HTTP OPTIONS /api/Products/6 completed with status 204 at "2025-05-29T15:33:34.2290039Z"
+2025-05-29 22:33:34.236 +07:00 [INF] HTTP PUT /api/Products/6 started at "2025-05-29T15:33:34.2369665Z"
+2025-05-29 22:33:34.279 +07:00 [INF] Updating product with ID: 6
+2025-05-29 22:33:34.301 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT `p`.`Id`, `p`.`CreatedAt`, `p`.`CreatedBy`, `p`.`DeletedAt`, `p`.`DeletedBy`, `p`.`Description`, `p`.`is_delete`, `p`.`Name`, `p`.`Price`, `p`.`UpdateBy`, `p`.`UpdatedAt`
+FROM `products` AS `p`
+WHERE `p`.`Id` = @__p_0
+LIMIT 1
+2025-05-29 22:33:34.428 +07:00 [INF] Executed DbCommand (7ms) [Parameters=[@p3='?' (DbType = Int32), @p0='?' (DbType = Decimal), @p1='?' (Size = 255), @p2='?' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+SET AUTOCOMMIT = 1;
+UPDATE `products` SET `Price` = @p0, `UpdateBy` = @p1, `UpdatedAt` = @p2
+WHERE `Id` = @p3;
+SELECT ROW_COUNT();
+2025-05-29 22:33:34.452 +07:00 [INF] Product with ID 6 updated successfully
+2025-05-29 22:33:34.454 +07:00 [INF] HTTP PUT /api/Products/6 completed with status 204 at "2025-05-29T15:33:34.4539926Z"
+2025-05-29 22:33:35.470 +07:00 [INF] HTTP OPTIONS /api/Products started at "2025-05-29T15:33:35.4701856Z"
+2025-05-29 22:33:35.473 +07:00 [INF] HTTP OPTIONS /api/Products completed with status 204 at "2025-05-29T15:33:35.4735502Z"
+2025-05-29 22:33:35.479 +07:00 [INF] HTTP GET /api/Products started at "2025-05-29T15:33:35.4791300Z"
+2025-05-29 22:33:35.493 +07:00 [INF] Getting products with filters: name=null, minPrice=null, maxPrice=null
+2025-05-29 22:33:35.497 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `p`.`Id`, `p`.`CreatedAt`, `p`.`CreatedBy`, `p`.`DeletedAt`, `p`.`DeletedBy`, `p`.`Description`, `p`.`is_delete`, `p`.`Name`, `p`.`Price`, `p`.`UpdateBy`, `p`.`UpdatedAt`
+FROM `products` AS `p`
+WHERE `p`.`is_delete` = FALSE
+2025-05-29 22:33:35.500 +07:00 [INF] Retrieved 3 products
+2025-05-29 22:33:35.501 +07:00 [INF] HTTP GET /api/Products completed with status 200 at "2025-05-29T15:33:35.5016142Z"
+2025-05-29 22:33:36.771 +07:00 [INF] HTTP OPTIONS /api/Products/5 started at "2025-05-29T15:33:36.7716409Z"
+2025-05-29 22:33:36.774 +07:00 [INF] HTTP OPTIONS /api/Products/5 completed with status 204 at "2025-05-29T15:33:36.7740078Z"
+2025-05-29 22:33:36.778 +07:00 [INF] HTTP GET /api/Products/5 started at "2025-05-29T15:33:36.7787894Z"
+2025-05-29 22:33:36.793 +07:00 [INF] Getting product with ID: 5
+2025-05-29 22:33:36.796 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT `p`.`Id`, `p`.`CreatedAt`, `p`.`CreatedBy`, `p`.`DeletedAt`, `p`.`DeletedBy`, `p`.`Description`, `p`.`is_delete`, `p`.`Name`, `p`.`Price`, `p`.`UpdateBy`, `p`.`UpdatedAt`
+FROM `products` AS `p`
+WHERE (`p`.`is_delete` = FALSE) AND (`p`.`Id` = @__id_0)
+LIMIT 1
+2025-05-29 22:33:36.798 +07:00 [INF] Retrieved product with ID: 5
+2025-05-29 22:33:36.799 +07:00 [INF] HTTP GET /api/Products/5 completed with status 200 at "2025-05-29T15:33:36.7995605Z"
+2025-05-29 22:33:40.915 +07:00 [INF] HTTP OPTIONS /api/Products/5 started at "2025-05-29T15:33:40.9159624Z"
+2025-05-29 22:33:40.918 +07:00 [INF] HTTP OPTIONS /api/Products/5 completed with status 204 at "2025-05-29T15:33:40.9184217Z"
+2025-05-29 22:33:40.923 +07:00 [INF] HTTP PUT /api/Products/5 started at "2025-05-29T15:33:40.9237443Z"
+2025-05-29 22:33:40.940 +07:00 [INF] Updating product with ID: 5
+2025-05-29 22:33:40.946 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT `p`.`Id`, `p`.`CreatedAt`, `p`.`CreatedBy`, `p`.`DeletedAt`, `p`.`DeletedBy`, `p`.`Description`, `p`.`is_delete`, `p`.`Name`, `p`.`Price`, `p`.`UpdateBy`, `p`.`UpdatedAt`
+FROM `products` AS `p`
+WHERE `p`.`Id` = @__p_0
+LIMIT 1
+2025-05-29 22:33:40.955 +07:00 [INF] Executed DbCommand (4ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (DbType = Decimal), @p1='?' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+SET AUTOCOMMIT = 1;
+UPDATE `products` SET `Price` = @p0, `UpdatedAt` = @p1
+WHERE `Id` = @p2;
+SELECT ROW_COUNT();
+2025-05-29 22:33:40.960 +07:00 [INF] Product with ID 5 updated successfully
+2025-05-29 22:33:40.961 +07:00 [INF] HTTP PUT /api/Products/5 completed with status 204 at "2025-05-29T15:33:40.9614336Z"
+2025-05-29 22:33:41.706 +07:00 [INF] HTTP OPTIONS /api/Products started at "2025-05-29T15:33:41.7061274Z"
+2025-05-29 22:33:41.708 +07:00 [INF] HTTP OPTIONS /api/Products completed with status 204 at "2025-05-29T15:33:41.7082124Z"
+2025-05-29 22:33:41.712 +07:00 [INF] HTTP GET /api/Products started at "2025-05-29T15:33:41.7129180Z"
+2025-05-29 22:33:41.727 +07:00 [INF] Getting products with filters: name=null, minPrice=null, maxPrice=null
+2025-05-29 22:33:41.732 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `p`.`Id`, `p`.`CreatedAt`, `p`.`CreatedBy`, `p`.`DeletedAt`, `p`.`DeletedBy`, `p`.`Description`, `p`.`is_delete`, `p`.`Name`, `p`.`Price`, `p`.`UpdateBy`, `p`.`UpdatedAt`
+FROM `products` AS `p`
+WHERE `p`.`is_delete` = FALSE
+2025-05-29 22:33:41.737 +07:00 [INF] Retrieved 3 products
+2025-05-29 22:33:41.738 +07:00 [INF] HTTP GET /api/Products completed with status 200 at "2025-05-29T15:33:41.7388922Z"
+2025-05-29 22:33:50.818 +07:00 [INF] HTTP OPTIONS /api/Products started at "2025-05-29T15:33:50.8185556Z"
+2025-05-29 22:33:50.821 +07:00 [INF] HTTP OPTIONS /api/Products completed with status 204 at "2025-05-29T15:33:50.8219551Z"
+2025-05-29 22:33:50.826 +07:00 [INF] HTTP GET /api/Products started at "2025-05-29T15:33:50.8268382Z"
+2025-05-29 22:33:50.847 +07:00 [INF] Getting products with filters: name=3, minPrice=null, maxPrice=null
+2025-05-29 22:33:50.854 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__name_0_contains='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `p`.`Id`, `p`.`CreatedAt`, `p`.`CreatedBy`, `p`.`DeletedAt`, `p`.`DeletedBy`, `p`.`Description`, `p`.`is_delete`, `p`.`Name`, `p`.`Price`, `p`.`UpdateBy`, `p`.`UpdatedAt`
+FROM `products` AS `p`
+WHERE (`p`.`is_delete` = FALSE) AND (`p`.`Name` LIKE @__name_0_contains)
+2025-05-29 22:33:50.856 +07:00 [INF] Retrieved 0 products
+2025-05-29 22:33:50.858 +07:00 [INF] HTTP GET /api/Products completed with status 200 at "2025-05-29T15:33:50.8584032Z"
+2025-05-29 22:33:52.042 +07:00 [INF] HTTP OPTIONS /api/Products started at "2025-05-29T15:33:52.0429127Z"
+2025-05-29 22:33:52.044 +07:00 [INF] HTTP OPTIONS /api/Products completed with status 204 at "2025-05-29T15:33:52.0445057Z"
+2025-05-29 22:33:52.047 +07:00 [INF] HTTP GET /api/Products started at "2025-05-29T15:33:52.0475856Z"
+2025-05-29 22:33:52.061 +07:00 [INF] Getting products with filters: name=35, minPrice=null, maxPrice=null
+2025-05-29 22:33:52.065 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__name_0_contains='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `p`.`Id`, `p`.`CreatedAt`, `p`.`CreatedBy`, `p`.`DeletedAt`, `p`.`DeletedBy`, `p`.`Description`, `p`.`is_delete`, `p`.`Name`, `p`.`Price`, `p`.`UpdateBy`, `p`.`UpdatedAt`
+FROM `products` AS `p`
+WHERE (`p`.`is_delete` = FALSE) AND (`p`.`Name` LIKE @__name_0_contains)
+2025-05-29 22:33:52.068 +07:00 [INF] Retrieved 0 products
+2025-05-29 22:33:52.069 +07:00 [INF] HTTP GET /api/Products completed with status 200 at "2025-05-29T15:33:52.0695911Z"
+2025-05-29 22:33:52.575 +07:00 [INF] HTTP OPTIONS /api/Products started at "2025-05-29T15:33:52.5757321Z"
+2025-05-29 22:33:52.577 +07:00 [INF] HTTP OPTIONS /api/Products completed with status 204 at "2025-05-29T15:33:52.5778471Z"
+2025-05-29 22:33:52.582 +07:00 [INF] HTTP GET /api/Products started at "2025-05-29T15:33:52.5824654Z"
+2025-05-29 22:33:52.595 +07:00 [INF] Getting products with filters: name=null, minPrice=null, maxPrice=null
+2025-05-29 22:33:52.599 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `p`.`Id`, `p`.`CreatedAt`, `p`.`CreatedBy`, `p`.`DeletedAt`, `p`.`DeletedBy`, `p`.`Description`, `p`.`is_delete`, `p`.`Name`, `p`.`Price`, `p`.`UpdateBy`, `p`.`UpdatedAt`
+FROM `products` AS `p`
+WHERE `p`.`is_delete` = FALSE
+2025-05-29 22:33:52.601 +07:00 [INF] Retrieved 3 products
+2025-05-29 22:33:52.603 +07:00 [INF] HTTP GET /api/Products completed with status 200 at "2025-05-29T15:33:52.6030177Z"
+2025-05-29 22:33:54.014 +07:00 [INF] HTTP GET /api/Products started at "2025-05-29T15:33:54.0146367Z"
+2025-05-29 22:33:54.029 +07:00 [INF] Getting products with filters: name=35, minPrice=null, maxPrice=null
+2025-05-29 22:33:54.033 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__name_0_contains='?' (Size = 255)], CommandType='"Text"', CommandTimeout='30']
+SELECT `p`.`Id`, `p`.`CreatedAt`, `p`.`CreatedBy`, `p`.`DeletedAt`, `p`.`DeletedBy`, `p`.`Description`, `p`.`is_delete`, `p`.`Name`, `p`.`Price`, `p`.`UpdateBy`, `p`.`UpdatedAt`
+FROM `products` AS `p`
+WHERE (`p`.`is_delete` = FALSE) AND (`p`.`Name` LIKE @__name_0_contains)
+2025-05-29 22:33:54.035 +07:00 [INF] Retrieved 0 products
+2025-05-29 22:33:54.036 +07:00 [INF] HTTP GET /api/Products completed with status 200 at "2025-05-29T15:33:54.0365534Z"
+2025-05-29 22:33:55.158 +07:00 [INF] HTTP OPTIONS /api/Products started at "2025-05-29T15:33:55.1589126Z"
+2025-05-29 22:33:55.160 +07:00 [INF] HTTP OPTIONS /api/Products completed with status 204 at "2025-05-29T15:33:55.1606591Z"
+2025-05-29 22:33:55.164 +07:00 [INF] HTTP GET /api/Products started at "2025-05-29T15:33:55.1646304Z"
+2025-05-29 22:33:55.180 +07:00 [INF] Getting products with filters: name=35, minPrice=123, maxPrice=null
+2025-05-29 22:33:55.191 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__name_0_contains='?' (Size = 255), @__minPrice_Value_1='?' (DbType = Decimal)], CommandType='"Text"', CommandTimeout='30']
+SELECT `p`.`Id`, `p`.`CreatedAt`, `p`.`CreatedBy`, `p`.`DeletedAt`, `p`.`DeletedBy`, `p`.`Description`, `p`.`is_delete`, `p`.`Name`, `p`.`Price`, `p`.`UpdateBy`, `p`.`UpdatedAt`
+FROM `products` AS `p`
+WHERE ((`p`.`is_delete` = FALSE) AND (`p`.`Name` LIKE @__name_0_contains)) AND (`p`.`Price` >= @__minPrice_Value_1)
+2025-05-29 22:33:55.193 +07:00 [INF] Retrieved 0 products
+2025-05-29 22:33:55.194 +07:00 [INF] HTTP GET /api/Products completed with status 200 at "2025-05-29T15:33:55.1947927Z"
+2025-05-29 22:33:55.658 +07:00 [INF] HTTP GET /api/Products started at "2025-05-29T15:33:55.6587463Z"
+2025-05-29 22:33:55.675 +07:00 [INF] Getting products with filters: name=null, minPrice=null, maxPrice=null
+2025-05-29 22:33:55.679 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `p`.`Id`, `p`.`CreatedAt`, `p`.`CreatedBy`, `p`.`DeletedAt`, `p`.`DeletedBy`, `p`.`Description`, `p`.`is_delete`, `p`.`Name`, `p`.`Price`, `p`.`UpdateBy`, `p`.`UpdatedAt`
+FROM `products` AS `p`
+WHERE `p`.`is_delete` = FALSE
+2025-05-29 22:33:55.681 +07:00 [INF] Retrieved 3 products
+2025-05-29 22:33:55.683 +07:00 [INF] HTTP GET /api/Products completed with status 200 at "2025-05-29T15:33:55.6832892Z"
+2025-05-29 22:33:55.685 +07:00 [INF] HTTP GET /api/Products started at "2025-05-29T15:33:55.6853118Z"
+2025-05-29 22:33:55.700 +07:00 [INF] Getting products with filters: name=null, minPrice=null, maxPrice=null
+2025-05-29 22:33:55.703 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `p`.`Id`, `p`.`CreatedAt`, `p`.`CreatedBy`, `p`.`DeletedAt`, `p`.`DeletedBy`, `p`.`Description`, `p`.`is_delete`, `p`.`Name`, `p`.`Price`, `p`.`UpdateBy`, `p`.`UpdatedAt`
+FROM `products` AS `p`
+WHERE `p`.`is_delete` = FALSE
+2025-05-29 22:33:55.706 +07:00 [INF] Retrieved 3 products
+2025-05-29 22:33:55.707 +07:00 [INF] HTTP GET /api/Products completed with status 200 at "2025-05-29T15:33:55.7073337Z"
+2025-05-29 22:34:01.413 +07:00 [INF] HTTP OPTIONS /api/Products started at "2025-05-29T15:34:01.4131696Z"
+2025-05-29 22:34:01.415 +07:00 [INF] HTTP OPTIONS /api/Products completed with status 204 at "2025-05-29T15:34:01.4153668Z"
+2025-05-29 22:34:01.419 +07:00 [INF] HTTP POST /api/Products started at "2025-05-29T15:34:01.4197674Z"
+2025-05-29 22:34:01.441 +07:00 [INF] Creating new product: Test
+2025-05-29 22:34:01.508 +07:00 [INF] Executed DbCommand (3ms) [Parameters=[@p0='?' (DbType = DateTime), @p1='?' (Size = 255), @p2='?' (DbType = DateTime), @p3='?' (Size = 255), @p4='?' (Size = 255), @p5='?' (DbType = Boolean), @p6='?' (Size = 255), @p7='?' (DbType = Decimal), @p8='?' (Size = 255), @p9='?' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `products` (`CreatedAt`, `CreatedBy`, `DeletedAt`, `DeletedBy`, `Description`, `is_delete`, `Name`, `Price`, `UpdateBy`, `UpdatedAt`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9);
+SELECT `Id`
+FROM `products`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2025-05-29 22:34:01.549 +07:00 [INF] Product created successfully with ID: 9
+2025-05-29 22:34:01.582 +07:00 [INF] HTTP POST /api/Products completed with status 201 at "2025-05-29T15:34:01.5824971Z"
+2025-05-29 22:34:02.615 +07:00 [INF] HTTP GET /api/Products started at "2025-05-29T15:34:02.6153565Z"
+2025-05-29 22:34:02.630 +07:00 [INF] Getting products with filters: name=null, minPrice=null, maxPrice=null
+2025-05-29 22:34:02.633 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `p`.`Id`, `p`.`CreatedAt`, `p`.`CreatedBy`, `p`.`DeletedAt`, `p`.`DeletedBy`, `p`.`Description`, `p`.`is_delete`, `p`.`Name`, `p`.`Price`, `p`.`UpdateBy`, `p`.`UpdatedAt`
+FROM `products` AS `p`
+WHERE `p`.`is_delete` = FALSE
+2025-05-29 22:34:02.636 +07:00 [INF] Retrieved 4 products
+2025-05-29 22:34:02.638 +07:00 [INF] HTTP GET /api/Products completed with status 200 at "2025-05-29T15:34:02.6385008Z"
+2025-05-29 22:34:04.875 +07:00 [INF] HTTP OPTIONS /api/Products/9 started at "2025-05-29T15:34:04.8756224Z"
+2025-05-29 22:34:04.881 +07:00 [INF] HTTP OPTIONS /api/Products/9 completed with status 204 at "2025-05-29T15:34:04.8812231Z"
+2025-05-29 22:34:04.888 +07:00 [INF] HTTP DELETE /api/Products/9 started at "2025-05-29T15:34:04.8883993Z"
+2025-05-29 22:34:04.919 +07:00 [INF] Soft deleting product with ID: 9
+2025-05-29 22:34:04.925 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT `p`.`Id`, `p`.`CreatedAt`, `p`.`CreatedBy`, `p`.`DeletedAt`, `p`.`DeletedBy`, `p`.`Description`, `p`.`is_delete`, `p`.`Name`, `p`.`Price`, `p`.`UpdateBy`, `p`.`UpdatedAt`
+FROM `products` AS `p`
+WHERE `p`.`Id` = @__p_0
+LIMIT 1
+2025-05-29 22:34:04.935 +07:00 [INF] Executed DbCommand (3ms) [Parameters=[@p10='?' (DbType = Int32), @p0='?' (DbType = DateTime), @p1='?' (Size = 255), @p2='?' (DbType = DateTime), @p3='?' (Size = 255), @p4='?' (Size = 255), @p5='?' (DbType = Boolean), @p6='?' (Size = 255), @p7='?' (DbType = Decimal), @p8='?' (Size = 255), @p9='?' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+SET AUTOCOMMIT = 1;
+UPDATE `products` SET `CreatedAt` = @p0, `CreatedBy` = @p1, `DeletedAt` = @p2, `DeletedBy` = @p3, `Description` = @p4, `is_delete` = @p5, `Name` = @p6, `Price` = @p7, `UpdateBy` = @p8, `UpdatedAt` = @p9
+WHERE `Id` = @p10;
+SELECT ROW_COUNT();
+2025-05-29 22:34:04.938 +07:00 [INF] Product with ID 9 soft deleted successfully
+2025-05-29 22:34:04.940 +07:00 [INF] HTTP DELETE /api/Products/9 completed with status 204 at "2025-05-29T15:34:04.9401977Z"
+2025-05-29 22:34:12.314 +07:00 [INF] Application is shutting down...

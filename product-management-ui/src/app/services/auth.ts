@@ -23,7 +23,7 @@ interface ApiResponse<T> {
     providedIn: 'root'
 })
 export class AuthService {
-    private apiUrl = 'http://localhost:5063/api/Auth'; // Updated to match backend controller case
+    private apiUrl = 'http://localhost:5063/api/Auth';
     private tokenKey = 'auth_token';
     private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasValidToken());
 
@@ -65,7 +65,6 @@ export class AuthService {
 
     private hasValidToken(): boolean {
         const token = this.getToken();
-        // You might want to add token expiration validation here
         return !!token;
     }
 } 
