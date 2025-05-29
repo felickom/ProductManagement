@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProductManagement.API.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProductManagement.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProductsController : ControllerBase
@@ -50,7 +52,7 @@ namespace ProductManagement.API.Controllers
                 Description = product.Description,
                 Price = product.Price,
                 IsDelete = false,
-                CreatedBy = "Admin"
+                CreatedBy = User.Identity.Name
             };
 
             _context.Products.Add(newProduct);
@@ -73,7 +75,7 @@ namespace ProductManagement.API.Controllers
             existingProduct.Name = product.Name;
             existingProduct.Description = product.Description;
             existingProduct.Price = product.Price;
-            existingProduct.UpdateBy = "Admin";
+            existingProduct.UpdateBy = User.Identity.Name;
             existingProduct.UpdatedAt = DateTime.Now;
 
             try
@@ -106,7 +108,7 @@ namespace ProductManagement.API.Controllers
             }
 
             product.IsDelete = true;
-            product.DeletedBy = "Admin";
+            product.DeletedBy = User.Identity.Name;
             product.DeletedAt = DateTime.Now;
 
             _context.Products.Update(product);

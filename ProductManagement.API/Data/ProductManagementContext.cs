@@ -5,13 +5,13 @@ using Pomelo.EntityFrameworkCore.MySql.Scaffolding.Internal;
 
 namespace ProductManagement.API.Data;
 
-public partial class ProductManagementContext : DbContext
+public partial class ProductmanagementContext : DbContext
 {
-    public ProductManagementContext()
+    public ProductmanagementContext()
     {
     }
 
-    public ProductManagementContext(DbContextOptions<ProductManagementContext> options)
+    public ProductmanagementContext(DbContextOptions<ProductmanagementContext> options)
         : base(options)
     {
     }
@@ -22,7 +22,7 @@ public partial class ProductManagementContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySql("server=localhost;port=3306;database=productManagement;username=root;password=1234", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.41-mysql"));
+        => optionsBuilder.UseMySql("server=localhost;port=3306;database=productmanagement;username=root;password=1234", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.41-mysql"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -32,9 +32,9 @@ public partial class ProductManagementContext : DbContext
 
         modelBuilder.Entity<Apiuser>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("apiuser");
+            entity.HasKey(e => e.ClientId).HasName("PRIMARY");
+
+            entity.ToTable("apiuser");
 
             entity.Property(e => e.Password)
                 .HasMaxLength(255)
@@ -61,7 +61,7 @@ public partial class ProductManagementContext : DbContext
             entity.Property(e => e.Description).HasMaxLength(255);
             entity.Property(e => e.IsDelete).HasColumnName("is_delete");
             entity.Property(e => e.Name).HasMaxLength(255);
-            entity.Property(e => e.Price).HasMaxLength(255);
+            entity.Property(e => e.Price).HasPrecision(10);
             entity.Property(e => e.UpdateBy).HasMaxLength(255);
             entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
         });

@@ -11,7 +11,7 @@ public partial class Product
 
     public string? Description { get; set; }
 
-    public string Price { get; set; } = null!;
+    public decimal Price { get; set; }
 
     public bool? IsDelete { get; set; }
 

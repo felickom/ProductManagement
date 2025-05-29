@@ -131,3 +131,12 @@ D:\GitHub\ProductManagement\productManagement.API\obj\Debug\net8.0\refint\Produc
 D:\GitHub\ProductManagement\productManagement.API\obj\Debug\net8.0\ProductManagement.API.pdb
 D:\GitHub\ProductManagement\productManagement.API\obj\Debug\net8.0\ProductManagement.API.genruntimeconfig.cache
 D:\GitHub\ProductManagement\productManagement.API\obj\Debug\net8.0\ref\ProductManagement.API.dll
+D:\GitHub\ProductManagement\productManagement.API\bin\Debug\net8.0\BCrypt.Net-Next.dll
+D:\GitHub\ProductManagement\productManagement.API\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\GitHub\ProductManagement\productManagement.API\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+D:\GitHub\ProductManagement\productManagement.API\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\GitHub\ProductManagement\productManagement.API\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+D:\GitHub\ProductManagement\productManagement.API\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+D:\GitHub\ProductManagement\productManagement.API\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+D:\GitHub\ProductManagement\productManagement.API\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+D:\GitHub\ProductManagement\productManagement.API\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
